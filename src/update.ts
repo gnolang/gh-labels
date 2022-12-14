@@ -24,7 +24,7 @@ class UpdateHandler {
 interface UpdateParams {
     new_name?: string;
     color?: string;
-    description?: string;
+    description?: string | null;
 }
 
 export { UpdateHandler, UpdateParams };

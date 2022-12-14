@@ -8,6 +8,8 @@ class DeleteHandler {
     static async deleteLabels(params: RequiredParams, labels: string[]) {
         if (labels.length == 0) {
             Logger.warn('No labels specified');
+
+            return;
         }
 
         const deleteErrors: Error[] = [];

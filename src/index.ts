@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
+import CommonUtils from './common';
 import { CreateHandler } from './create';
 import DeleteHandler from './delete';
 import Logger from './logger/logger';
 import { ReadHandler } from './read';
 import { RequiredParams } from './services/rest/restService.types';
+import SetHandler from './set';
 import { UpdateHandler } from './update';
 
 async function run() {
@@ -29,17 +31,17 @@ async function run() {
 
     program.requiredOption(
         '-o, --owner <owner>',
-        'The account owner of the repository. The name is not case sensitive',
+        'The account owner of the repository. The name is not case sensitive'
     );
 
     program.requiredOption(
         '-r, --repo <repo>',
-        'The name of the repository. The name is not case sensitive',
+        'The name of the repository. The name is not case sensitive'
     );
 
     program.requiredOption(
         '-t, --token <token>',
-        'The access token provided by GitHub',
+        'The access token provided by GitHub'
     );
 
     // Define the create command
@@ -49,16 +51,16 @@ async function run() {
         .option('-n, --name <name>', 'The name of the label')
         .option(
             '-c, --color <color>',
-            'The hexadecimal color code for the label, without the leading #',
+            'The hexadecimal color code for the label, without the leading #'
         )
         .option(
             '-d, --description <description>',
-            'A short description of the label. Must be 100 characters or fewer',
+            'A short description of the label. Must be 100 characters or fewer'
         )
-        .action(() => {
+        .action(async () => {
             const options = program.opts();
 
-            CreateHandler.createLabel(getRequiredParams(), {
+            await CreateHandler.createLabel(getRequiredParams(), {
                 name: options.name,
                 color: options.color,
                 description: options.description,
@@ -70,10 +72,17 @@ async function run() {
         .command('get')
         .description('fetches a label from the repository')
         .option('-n, --name <name>', 'The name of the label')
-        .action(() => {
+        .action(async () => {
             const options = program.opts();
 
-            ReadHandler.getLabel(getRequiredParams(), options.name);
+            const label = await ReadHandler.getLabel(
+                getRequiredParams(),
+                options.name
+            );
+
+            Logger.info(`Label ${options.name} information:\n`);
+
+            CommonUtils.printLabels([label]);
         });
 
     // Define the get-all command
@@ -83,15 +92,19 @@ async function run() {
         .option('-p, --page <page>', 'Page number of the results to fetch')
         .option(
             '-pp, --per-page <perPage>',
-            'The number of results per page (max 100)',
+            'The number of results per page (max 100)'
         )
-        .action(() => {
+        .action(async () => {
             const options = program.opts();
 
-            ReadHandler.getAllLabels(getRequiredParams(), {
+            const labels = await ReadHandler.getAllLabels(getRequiredParams(), {
                 per_page: options.perPage ? options.perPage : 30,
                 page: options.page ? options.page : 1,
             });
+
+            Logger.info(`Received ${labels.length} labels:\n`);
+
+            CommonUtils.printLabels(labels);
         });
 
     // Define the update command
@@ -102,23 +115,23 @@ async function run() {
         .option('-nn, --new-name <newName>', 'The new name of the label')
         .option(
             '-c, --color <color>',
-            'The hexadecimal color code for the label, without the leading #',
+            'The hexadecimal color code for the label, without the leading #'
         )
         .option(
             '-d, --description <description>',
-            'A short description of the label. Must be 100 characters or fewer',
+            'A short description of the label. Must be 100 characters or fewer'
         )
-        .action(() => {
+        .action(async () => {
             const options = program.opts();
 
-            UpdateHandler.updateLabel(
+            await UpdateHandler.updateLabel(
                 getRequiredParams(),
                 {
                     new_name: options.newName,
                     color: options.color,
                     description: options.description,
                 },
-                options.name,
+                options.name
             );
         });
 
@@ -127,19 +140,21 @@ async function run() {
         .command('delete')
         .description('deletes labels using the provided list')
         .argument('<labels...>', 'labels to delete')
-        .action((labels: string[]) => {
-            DeleteHandler.deleteLabels(getRequiredParams(), labels);
+        .action(async (labels: string[]) => {
+            await DeleteHandler.deleteLabels(getRequiredParams(), labels);
         });
 
     // Define the set command
     program
         .command('set')
         .description(
-            'sets the labels using the provided list. Removes missing (config) labels, adds new (config) ones, and updates existing labels',
+            'sets the labels using the provided list. Removes missing (config) labels, adds new (config) ones, and updates existing labels'
         )
-        .argument('<path>', 'path to the corresponding label *.json file')
-        .action(() => {
-            // TODO
+        .argument('<path>', 'path to the corresponding label config json file')
+        .action(async () => {
+            const options = program.opts();
+
+            await SetHandler.setLabels(getRequiredParams(), options.path);
         });
 
     program.parse();

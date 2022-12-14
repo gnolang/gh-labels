@@ -20,7 +20,7 @@ class CreateHandler {
 interface CreateParams {
     name: string;
     color: string;
-    description: string;
+    description: string | null;
 }
 
 export { CreateHandler, CreateParams };
