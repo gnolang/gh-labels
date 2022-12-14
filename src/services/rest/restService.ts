@@ -59,10 +59,10 @@ export class RestService {
             .then((response) => response.data);
     }
 
-    static async patch<T>(params: RequestParams) {
+    static async patch<T>(params: RequestParams, name: string) {
         return axios
             .patch(
-                `${baseUrl}/${params.owner}/${params.repo}/labels`,
+                `${baseUrl}/${params.owner}/${params.repo}/labels/${name}`,
                 params.data,
                 {
                     headers: {
