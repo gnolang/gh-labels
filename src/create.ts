@@ -1,3 +1,4 @@
+import Logger from './logger/logger';
 import { RestService } from './services/rest/restService';
 import { RequiredParams } from './services/rest/restService.types';
 
@@ -11,6 +12,8 @@ class CreateHandler {
             ...params,
             data: createParams,
         });
+
+        Logger.success(`Label ${createParams.name} successfully created!`);
     }
 }
 

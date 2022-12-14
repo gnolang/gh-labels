@@ -1,3 +1,4 @@
+import Logger from './logger/logger';
 import { RestService } from './services/rest/restService';
 import { RequiredParams } from './services/rest/restService.types';
 
@@ -15,6 +16,8 @@ class UpdateHandler {
             },
             name
         );
+
+        Logger.success(`Label ${name} successfully updated!`);
     }
 }
 

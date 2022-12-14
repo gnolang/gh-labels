@@ -19,14 +19,17 @@ export class RestService {
             .then((response) => response.data);
     }
 
-    static async get<T>(params: Omit<RequestParams, 'data'>) {
+    static async get<T>(params: Omit<RequestParams, 'data'>, postfix?: string) {
         return axios
-            .get<T>(`${baseUrl}/${params.owner}/${params.repo}/labels`, {
-                headers: {
-                    Accept: 'application/vnd.github+json',
-                    Authorization: 'Bearer ' + params.token,
-                },
-            })
+            .get<T>(
+                `${baseUrl}/${params.owner}/${params.repo}/labels${postfix}`,
+                {
+                    headers: {
+                        Accept: 'application/vnd.github+json',
+                        Authorization: 'Bearer ' + params.token,
+                    },
+                }
+            )
             .then((response) => response.data);
     }
 
