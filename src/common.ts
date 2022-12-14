@@ -1,5 +1,6 @@
 import chalk from 'chalk';
-import Table from 'cli-table';
+import Table from 'cli-table3';
+import * as fs from 'fs';
 import Logger from './logger/logger';
 import { Label } from './types';
 
@@ -18,10 +19,9 @@ class CommonUtils {
         );
     }
 
-    static async fetchLabels(path: string): Promise<Label[]> {
-        const labelsRaw = await fetch(path);
-
-        return labelsRaw.json();
+    static fetchLabels(path: string): Label[] {
+        // @ts-ignore
+        return JSON.parse(fs.readFileSync(path));
     }
 
     // Prints the input labels in table format
@@ -36,7 +36,7 @@ class CommonUtils {
             labelTable.push([
                 label.name,
                 label.description ? label.description : '/',
-                chalk.hex(color)(color),
+                label.color ? chalk.hex(color)(color) : '/',
             ]);
         }
 

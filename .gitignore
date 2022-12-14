@@ -7,3 +7,9 @@ bin
 # Dev environment metadata
 .idea
 .DS_Store
+
+# Log files
+*.log
+
+# Input JSON
+*.json

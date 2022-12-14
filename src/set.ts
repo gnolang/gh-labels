@@ -11,7 +11,7 @@ class SetHandler {
     // Sets the repo labels to match the specified config
     static async setLabels(params: RequiredParams, path: string) {
         // Read the complete provided labels from disk
-        const desiredLabels: Label[] = await CommonUtils.fetchLabels(path);
+        const desiredLabels: Label[] = CommonUtils.fetchLabels(path);
 
         // Read the labels at the repository
         const repoLabels: Label[] = await ReadHandler.getAllLabels(params, {
@@ -38,6 +38,25 @@ class SetHandler {
         );
 
         // Add the labels
+        await SetHandler.addLabels(params, labelsToAdd);
+
+        // Remove the labels
+        await SetHandler.removeLabels(params, labelsToRemove);
+
+        // Update the labels
+        await SetHandler.updateLabels(params, labelsToUpdate);
+    }
+
+    static async addLabels(
+        params: RequiredParams,
+        labelsToAdd: Label[]
+    ): Promise<void> {
+        if (labelsToAdd.length < 1) {
+            Logger.warn('No labels to add');
+
+            return;
+        }
+
         Logger.info(`Adding ${labelsToAdd.length} new labels:`);
         CommonUtils.printLabels(labelsToAdd);
 
@@ -50,8 +69,18 @@ class SetHandler {
         }
 
         Logger.success(`Successfully added ${labelsToAdd.length} labels!`);
+    }
 
-        // Remove the labels
+    static async removeLabels(
+        params: RequiredParams,
+        labelsToRemove: Label[]
+    ): Promise<void> {
+        if (labelsToRemove.length < 1) {
+            Logger.warn('No labels to remove');
+
+            return;
+        }
+
         Logger.info(`Removing ${labelsToRemove.length} labels:`);
         CommonUtils.printLabels(labelsToRemove);
 
@@ -60,8 +89,18 @@ class SetHandler {
         }
 
         Logger.success(`Successfully removed ${labelsToRemove.length} labels!`);
+    }
 
-        // Update the labels
+    static async updateLabels(
+        params: RequiredParams,
+        labelsToUpdate: Label[]
+    ): Promise<void> {
+        if (labelsToUpdate.length < 1) {
+            Logger.warn('No labels to update');
+
+            return;
+        }
+
         Logger.info(`Updating ${labelsToUpdate.length} labels:`);
         CommonUtils.printLabels(labelsToUpdate);
 

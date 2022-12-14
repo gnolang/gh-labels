@@ -6,19 +6,19 @@ class Logger {
     }
 
     static title(s: string) {
-        console.log(`\n${chalk.blue(s)}`);
+        console.log(chalk.blue(s));
     }
 
     static warn(s: string) {
-        console.log(`\n${chalk.yellow(`⚠️️ ${s}`)}`);
+        console.log(chalk.yellow(`⚠️️ ${s}`));
     }
 
     static success(s: string) {
-        console.log(`\n${chalk.green(`✅ ${s}`)}`);
+        console.log(chalk.green(`✅ ${s}`));
     }
 
     static error(s: string) {
-        console.log(`\n${chalk.red(`⛔️ ${s}`)}`);
+        console.log(chalk.red(`⛔️ ${s}`));
     }
 }
 

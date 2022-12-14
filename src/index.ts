@@ -57,9 +57,7 @@ async function run() {
             '-d, --description <description>',
             'A short description of the label. Must be 100 characters or fewer'
         )
-        .action(async () => {
-            const options = program.opts();
-
+        .action(async (options) => {
             await CreateHandler.createLabel(getRequiredParams(), {
                 name: options.name,
                 color: options.color,
@@ -72,15 +70,13 @@ async function run() {
         .command('get')
         .description('fetches a label from the repository')
         .option('-n, --name <name>', 'The name of the label')
-        .action(async () => {
-            const options = program.opts();
-
+        .action(async (options) => {
             const label = await ReadHandler.getLabel(
                 getRequiredParams(),
                 options.name
             );
 
-            Logger.info(`Label ${options.name} information:\n`);
+            Logger.info(`Label ${options.name} information:`);
 
             CommonUtils.printLabels([label]);
         });
@@ -94,15 +90,13 @@ async function run() {
             '-pp, --per-page <perPage>',
             'The number of results per page (max 100)'
         )
-        .action(async () => {
-            const options = program.opts();
-
+        .action(async (options) => {
             const labels = await ReadHandler.getAllLabels(getRequiredParams(), {
                 per_page: options.perPage ? options.perPage : 30,
                 page: options.page ? options.page : 1,
             });
 
-            Logger.info(`Received ${labels.length} labels:\n`);
+            Logger.info(`Received ${labels.length} labels:`);
 
             CommonUtils.printLabels(labels);
         });
@@ -121,9 +115,7 @@ async function run() {
             '-d, --description <description>',
             'A short description of the label. Must be 100 characters or fewer'
         )
-        .action(async () => {
-            const options = program.opts();
-
+        .action(async (options) => {
             await UpdateHandler.updateLabel(
                 getRequiredParams(),
                 {
@@ -151,10 +143,8 @@ async function run() {
             'sets the labels using the provided list. Removes missing (config) labels, adds new (config) ones, and updates existing labels'
         )
         .argument('<path>', 'path to the corresponding label config json file')
-        .action(async () => {
-            const options = program.opts();
-
-            await SetHandler.setLabels(getRequiredParams(), options.path);
+        .action(async (path) => {
+            await SetHandler.setLabels(getRequiredParams(), path);
         });
 
     program.parse();

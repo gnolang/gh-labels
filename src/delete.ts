@@ -19,6 +19,8 @@ class DeleteHandler {
             hideCursor: true,
         });
 
+        Logger.title('Deleting labels...');
+
         deleteBar.start(labels.length, 0, {
             speed: 'N/A',
         });
