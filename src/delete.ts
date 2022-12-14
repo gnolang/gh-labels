@@ -44,6 +44,7 @@ class DeleteHandler {
         }
     }
 
+    // Delete the specified label
     static async deleteLabel(params: RequiredParams, label: string) {
         await RestService.delete(params, label);
     }
