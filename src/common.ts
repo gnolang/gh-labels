@@ -20,6 +20,7 @@ class CommonUtils {
     }
 
     static fetchLabels(path: string): Label[] {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return JSON.parse(fs.readFileSync(path));
     }
