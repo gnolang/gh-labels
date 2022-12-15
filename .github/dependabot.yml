@@ -1,12 +1,15 @@
 version: 2
 updates:
-  - package-ecosystem: npm
-    directory: /
-    target-branch: 'main'
-    schedule:
-      interval: weekly
-    open-pull-requests-limit: 10
-    pull-request-branch-name:
-      separator: '-'
-    reviewers:
-      - 'zivkovicmilos'
+    - package-ecosystem: npm
+      directory: /
+      target-branch: 'main'
+      schedule:
+          interval: weekly
+      ignore:
+          - dependency-name: 'chalk'
+            update-types: ['version-update:semver-patch']
+      open-pull-requests-limit: 10
+      pull-request-branch-name:
+          separator: '-'
+      reviewers:
+          - 'zivkovicmilos'
